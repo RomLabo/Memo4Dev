@@ -1,0 +1,26 @@
+@@ GIT 
+
+@ Configurer git
+Voir la configuration        |  git config -l 
+Nom de l'utilisateur         |  git config --global user.name "ton nom"
+Email de l'utilisateur       |  git config --global user.email "ton mail"
+
+@ Initialiser un dépôt local
+Créer le dépôt               |  git init  
+
+@ Ajouter ou retirer pour le commit
+Ajouter des fichiers         |  git add fichier1 fichier2
+Ajouter des dossiers         |  git add dossier1 dossier2
+Ajouter tout les éléments    |  git add *
+Supprimer des éléments       |  git rm --cached fichier1 fichier2
+Vider la zone de staging     |  git reset 
+
+@ Réaliser un commit 
+Réaliser commit              |  git commit -m "ton message"
+Réaliser commit via éditeur  |  git commit 
+Commit toutes modifs         |  git commit -am "ton message"
+
+@ Consulter historique / status
+Consulter état du dépôt      |  git status 
+Afficher historique commits  |  git log
+N derniers commits           |  git log -n ton nombre

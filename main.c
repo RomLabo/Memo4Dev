@@ -16,21 +16,24 @@
 typedef struct {
     char *value;
     int id;
+    char *name;
 } m_opt;
 
 static m_opt all_opt[] = {
-    { "git", 0 }, { "js", 1 }, { "php", 2 }, { "css", 3 }
+    { "git", 0, "docs/git.txt" }, { "js", 1, "docs/js.txt" },
+    { "php", 2, "docs/php.txt" }, { "css", 3, "docs/css.txt" }
 };
 
 #define NBOPT (sizeof(all_opt)/sizeof(m_opt))
 
-/* 
+/*
     Globals constants
 */
 const unsigned short int USR_IN_SIZE = 2;
 const unsigned short int RES_YES = 0;
 const unsigned short int RES_NO = 1;
 const unsigned short int RES_ERR = 2;
+const char* ext = ".txt";
 
 /*
     Globals variables
@@ -38,49 +41,45 @@ const unsigned short int RES_ERR = 2;
 char usr_in_val[USR_IN_SIZE];
 int usr_in_bin = 0;
 int is_quit = RES_ERR;
+FILE* ptr = NULL;
+char str[128];
+int current_id = -1;
 
-/* 
+/*
     Declaration of functions
 */
 int id_from_opt(const char *option);
 int do_quit(void);
 int empty_buffer(void);
+void show_help(void);
+int show_doc(int id);
 
 /*
     Main
 */
 int main(int argc, const char * argv[]) {
     printf("::: Memo4Dev :::\n\n");
-    int i;
     
-    if (argc == 2) {
-        switch (id_from_opt(argv[1])) {
-            case 0: printf("call git\n"); break;
-            case 1: printf("call js\n"); break;
-            case 2: printf("call php\n"); break;
-            case 3: printf("call css\n"); break;
-            case -1: printf("Error \n"); break;
-        }
+    current_id = id_from_opt(argv[1]);
+    if (argc == 2 && current_id != -1) {
+        show_doc(current_id);
     } else {
-        printf("all options :\n");
-        for (i = 0; i < NBOPT; i+= 2) {
-            printf("%s  %s\n", all_opt[i].value, all_opt[i+1].value);
-        }
+        show_help();
     }
     
-    int do_quit_val = 0;
+    /*int do_quit_val = 0;
     do {
         do_quit_val = do_quit();
-    } while (do_quit_val >= 2);
+    } while (do_quit_val >= 2);*/
     
     /* Test de la fonction do_quit */
-    if (do_quit_val == 0) {
+    /*if (do_quit_val == 0) {
         printf("Your response : %s !\n", usr_in_val);
         printf("Bye Bye !\n");
     } else {
         printf("Your response : %s !\n", usr_in_val);
         printf("Oh nice you stay here !\n");
-    }
+    }*/
     return 0;
 }
 
@@ -120,3 +119,25 @@ int empty_buffer(void) {
     }
     return 0;
 }
+
+void show_help(void) {
+    int i;
+    printf("All options :\n");
+    for (i = 0; i < NBOPT; i+= 2) {
+        printf("  %s  %s\n", all_opt[i].value, all_opt[i+1].value);
+    }
+}
+
+int show_doc(int id) {
+    ptr = fopen(all_opt[current_id].name, "r");
+    if (NULL == ptr) {
+        printf("File can't be opened \n");
+        return -1;
+    }
+    while (fgets(str, 128, ptr) != NULL) {
+        printf("%s", str);
+    }
+    fclose(ptr);
+    return 0;
+}
+
